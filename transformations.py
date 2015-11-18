@@ -5,22 +5,6 @@ import pandas as pd
 # magic numbers
 RETURN = -1
 
-# def scanFeatures(scans):
-# 	containsReturn = False
-# 	totalItemsBought = 0
-# 	totalDistinctItemsBought = 0
-# 	distributionOfItems = np.std(scans)
-# 	totalReturns = 0
-# 	for i in scans:
-# 		if i == RETURN:
-# 			containsReturn = True
-# 			totalReturns = totalReturns + 1
-# 		elif i > 0:
-# 			totalItemsBought = totalItemsBought + i
-# 			totalDistinctItemsBought = totalDistinctItemsBought + 1
-# 	return containsReturn, totalItemsBought, totalDistinctItemsBought, distributionOfItems, totalReturns
-
-
 # takes scanned items,
 # returns true if shopping trip contained
 # a return, i.e. a -1
@@ -76,9 +60,10 @@ def totalReturns(scans):
 # get total number of different departments
 # get total number of different fineline nums
 def numUniqueItems(items):
-    return len(pd.unique(items))
+	return len(np.unique(items))
 
-# get proportion of quantity of items bought : quantity of items returned
+######## TO IMPLEMENT
+# get ratio of quantity of items bought : quantity of items returned
 # get percentage of total purchase single row represents
 # get department where most purchases were mde
 # get FineLine for highest quantity purchase
