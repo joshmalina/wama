@@ -41,13 +41,12 @@ def add_features(train_or_test):
 	data = get_raw(train_or_test) # full data set
 
 	data = fill_nulls(data)
-	data = replaceStrings(data)
-
 	agg_scan = data.groupby('VisitNumber').ScanCount
 	agg = data.groupby('VisitNumber')
 
 	data['containsReturn'] = agg_scan.transform(containsReturn)
-	data['mostFreqFineLine'] = agg_scan.transform(most_pop_num)
+	data['mostFreqFineLine'] = agg.FinelineNumber.transform(most_pop_num)
+	data['mostFreqDept'] = agg.DepartmentDescription.transform(most_pop_string)
 
 	data['totalItemsBought'] = agg_scan.transform(totalItemsBought)
 	data['totalDistinctItemsBought'] = agg_scan.transform(totalDistinctItemsBought)
@@ -56,10 +55,33 @@ def add_features(train_or_test):
 	data['numTransactions'] = agg.VisitNumber.transform(len)
 	data['totalReturns'] = agg_scan.transform(totalReturns)
 	# for some reason, return a series of type 'object'
-	#data['numUniqueDepts'] = agg.DepartmentDescription.transform(numUniqueItems)
+	# cast it as a float
+	data['numUniqueDepts'] = agg.DepartmentDescription.transform(numUniqueStrings).astype(float)	
 	data['numUniqueFinelines'] = agg.FinelineNumber.transform(numUniqueItems)
 	data['avePurchaseSize'] = agg_scan.transform(np.mean)
-	data['medianPurchaseSize'] = agg_scan.transform(np.median)
+	#data['medianPurchaseSize'] = agg_scan.transform(np.median)
+
+	data = data.drop(['DepartmentDescription'], axis=1)
+
+	data = replaceStrings(data)
+
+	data = remove_features(data)
+
+	return data
+
+# aggregate the data before training it
+def remove_features(data):
+
+	# to_keep = ['TripType', 'VisitNumber', 'containsReturn', 'mostFreqFineLine', \
+	# 'mostFreqDept', 'totalItemsBought', 'totalDistinctItemsBought', 'itemDist', \
+	# 'numTransactions', 'totalReturns', 'numUniqueDepts', 'numUniqueFinelines', \
+	# 'avePurchaseSize', 'medianPurchaseSize']
+
+	to_exclude = ['Upc', 'FinelineNumber', 'ScanCount']	
+
+	data = data.drop(to_exclude, axis=1)
+
+	data = data.drop_duplicates(['VisitNumber'])
 
 	return data
 

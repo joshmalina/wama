@@ -12,11 +12,11 @@ def fill_extra_col(rf, test):
 	test.drop(diffsOther, inplace=True, axis=1)
 	return test
 
-def prep_for_submission():
+def prep_for_submission(rf = None, test = None):
 
-	rf = get_forest()
+	rf = rf or get_forest()
 
-	test = get_post('test')
+	test = test if len(test) > 0 else get_post('test')
 
 	test = fill_extra_col(rf, test)
 	preds = rf.predict_proba(test)
@@ -25,8 +25,17 @@ def prep_for_submission():
 	col_names = ['TripType_' + str(x) for x in rf.classes_]
 	# turn into data frame
 	preds = pd.DataFrame(preds, columns = col_names)
+
+	#preds['VisitNumber'] = test['VisitNumber'].unique()
+
+	preds.insert(0, 'VisitNumber', test['VisitNumber'].unique())
+
+	return preds
+
 	# add visit id column back
-	preds = pd.concat([test['VisitNumber'], preds], axis=1)
+	#preds = pd.concat([test['VisitNumber'], preds], axis=0)
+
+
 	# group by visit number 
 	grouped = preds.groupby('VisitNumber')
 	# aggregate by average

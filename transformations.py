@@ -20,6 +20,9 @@ def containsReturn(scans):
 def most_pop_num(vals):
 	return stats.mode(vals)[0]
 
+def most_pop_string(items):
+    return items.value_counts().index[0]
+
 # takes all the scans, ignored returned items
 # returns total items purchased
 def totalItemsBought(scans):
@@ -56,6 +59,9 @@ def totalReturns(scans):
 		if i == RETURN:
 			count = count + 1
 	return count
+
+def numUniqueStrings(items):
+    return items.nunique()
 
 # get total number of different departments
 # get total number of different fineline nums
