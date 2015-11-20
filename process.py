@@ -37,7 +37,7 @@ def replaceStrings(df):
 
 def add_features(train_or_test):
 
-	data = get_raw(train_or_test).ix[0:1000, :] # use for testing
+	#data = get_raw(train_or_test).ix[0:1000, :] # use for testing
 	data = get_raw(train_or_test) # full data set
 
 	data = fill_nulls(data)
@@ -48,8 +48,10 @@ def add_features(train_or_test):
 
 	data['containsReturn'] = agg_scan.transform(containsReturn)
 	data['mostFreqFineLine'] = agg_scan.transform(most_pop_num)
+
 	data['totalItemsBought'] = agg_scan.transform(totalItemsBought)
 	data['totalDistinctItemsBought'] = agg_scan.transform(totalDistinctItemsBought)
+
 	data['itemDist'] = agg_scan.transform(distributionOfItems)
 	data['numTransactions'] = agg.VisitNumber.transform(len)
 	data['totalReturns'] = agg_scan.transform(totalReturns)
