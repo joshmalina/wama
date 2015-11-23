@@ -1,6 +1,7 @@
 from scipy import stats
 import numpy as np
 import pandas as pd
+from collections import Counter
 
 # magic numbers
 RETURN = -1
@@ -41,6 +42,14 @@ def totalDistinctItemsBought(scans):
             total = total + 1
     return total
 
+def nextMostFreq(items):
+    c = Counter(items)
+    second = c.most_common(2)
+    if len(second) == 2:
+        return second[1][0]
+    else:
+        return second[0][0]
+
 # takes agged scans, returns standard deviation,
 # ie some measure of whether it was one big purchase
 # vs many smaller ones
@@ -67,6 +76,7 @@ def numUniqueStrings(items):
 # get total number of different fineline nums
 def numUniqueItems(items):
 	return len(np.unique(items))
+
 
 ######## TO IMPLEMENT
 # get ratio of quantity of items bought : quantity of items returned

@@ -16,6 +16,8 @@ def prep_for_submission(rf = None, test = None):
 
 	rf = rf or get_forest()
 
+	raw = get_raw('test')
+
 	test = test if len(test) > 0 else get_post('test')
 
 	test = fill_extra_col(rf, test)
@@ -28,7 +30,7 @@ def prep_for_submission(rf = None, test = None):
 
 	#preds['VisitNumber'] = test['VisitNumber'].unique()
 
-	preds.insert(0, 'VisitNumber', test['VisitNumber'].unique())
+	preds.insert(0, 'VisitNumber', raw['VisitNumber'].unique())
 
 	return preds
 

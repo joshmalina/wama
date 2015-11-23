@@ -45,7 +45,8 @@ def add_features(train_or_test):
 	agg = data.groupby('VisitNumber')
 
 	data['containsReturn'] = agg_scan.transform(containsReturn)
-	data['mostFreqFineLine'] = agg.FinelineNumber.transform(most_pop_num)
+	data['mostFreqFineline'] = agg.FinelineNumber.transform(most_pop_num)
+	data['nextMostFreqFineline'] = agg.FinelineNumber.transform(nextMostFreq)
 	data['mostFreqDept'] = agg.DepartmentDescription.transform(most_pop_string)
 
 	data['totalItemsBought'] = agg_scan.transform(totalItemsBought)
@@ -54,6 +55,13 @@ def add_features(train_or_test):
 	data['itemDist'] = agg_scan.transform(distributionOfItems)
 	data['numTransactions'] = agg.VisitNumber.transform(len)
 	data['totalReturns'] = agg_scan.transform(totalReturns)
+
+	with np.errstate(divide='ignore'):
+		result = np.true_divide(data['totalReturns'],data['totalItemsBought'])
+		result[result == np.inf] = 0
+		result = np.nan_to_num(result)
+		data['ratioReturnsToPurchases'] = result
+
 	# for some reason, return a series of type 'object'
 	# cast it as a float
 	data['numUniqueDepts'] = agg.DepartmentDescription.transform(numUniqueStrings).astype(float)	
